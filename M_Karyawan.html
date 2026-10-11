@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="id"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+    .sc-placeholder{background:color-mix(in srgb,currentColor 8%,transparent);
+      border:1px solid color-mix(in srgb,currentColor 50%,transparent);
+      border-radius:2px;box-sizing:border-box;overflow:hidden}
+    @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    html.sc-dc-streaming .sc-placeholder,
+    html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
+      background:color-mix(in srgb,currentColor 5%,transparent);
+      border-color:transparent}
+    html.sc-dc-streaming .sc-placeholder::before,
+    html.sc-dc-streaming .sc-interp.sc-missing::before{content:'';
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(217,119,87,0) 25%,rgba(247,225,211,.95) 37%,rgba(217,119,87,0) 63%);
+      background-size:400% 100%;animation:sc-shine 1.4s ease infinite}
+    html.sc-dc-streaming .sc-placeholder:nth-child(n+9 of .sc-placeholder)::before,
+    html.sc-dc-streaming .sc-interp.sc-missing:nth-child(n+9 of .sc-interp.sc-missing)::before{animation:none;
+      background:color-mix(in srgb,currentColor 8%,transparent)}
+    .sc-placeholder-error{padding:4px 8px;font:11px/1.4 ui-monospace,monospace;
+      color:color-mix(in srgb,currentColor 70%,transparent);word-break:break-word}
+    .sc-interp.sc-missing{display:inline-block;width:2em;height:1em;overflow:hidden;
+      vertical-align:text-bottom;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;color:transparent;
+      user-select:none}
+    .sc-interp.sc-unresolved{font-family:ui-monospace,monospace;font-size:.85em;
+      color:color-mix(in srgb,currentColor 50%,transparent);
+      background:color-mix(in srgb,currentColor 10%,transparent);border-radius:3px;
+      padding:0 3px}
+    .sc-host.sc-has-error{position:relative}
+    .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
+      padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
+      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+    /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts — keep both
+       in sync until dc-runtime regains a build step. */
+    @media print {
+      @page { margin: 0.5cm; }
+      figure, table { break-inside: avoid; }
+      #dc-root, #dc-root > .sc-host { height: auto; }
+      *, *::before, *::after {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+        animation-delay: -99s !important; animation-duration: .001s !important;
+        animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+        animation-play-state: running !important; transition-duration: 0s !important;
+      }
+    }
+  </style>
+<meta charset="utf-8">
+<title>Master Karyawan</title>
+<style>x-dc{display:none!important}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" data-dc-tpl="1"><style data-dc-tpl="2">
+body{margin:0;background:#eef1ee}
+a{color:#16624f}a:hover{color:#0d4436}
+.f{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#55625b;min-width:0}
+.in{height:38px;box-sizing:border-box;border:1px solid #c3ccc7;border-radius:6px;background:#fff;padding:0 10px;font:inherit;font-size:14px;color:#1b2420;width:100%}
+.ro{background:#f1f4f2;color:#3d4a44}
+.btn{min-height:40px;padding:0 16px;border-radius:6px;border:1px solid #c3ccc7;background:#fff;font:inherit;font-size:14px;font-weight:500;color:#1b2420;cursor:pointer}
+.pri{background:#16624f;border-color:#16624f;color:#fff}
+.card{background:#fff;border:1px solid #dfe4e0;border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.sec{margin:0;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#16624f}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 20px}
+.req::after{content:" *";color:#b42318}
+.hint{font-size:12px;color:#6b7a73}
+.note{background:#fff8d6;border:1px dashed #c9a227;border-radius:8px;padding:12px 16px;font-size:13px;color:#4d3f0c;display:flex;flex-direction:column;gap:4px}
+.mono{font-family:'IBM Plex Mono',monospace}
+.chip{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500;background:#e4ece8;color:#24493d}
+</style><style data-dc-tpl="2">
+body{margin:0}
+</style></head>
+<body>
+<div id="dc-root"><div class="sc-host" data-sc-name="M_Karyawan"><div data-dc-tpl="3" style="font-family: &quot;IBM Plex Sans&quot;, &quot;Segoe UI&quot;, sans-serif; color: rgb(27, 36, 32); display: flex; flex-wrap: wrap; min-height: 100%;">
+  <div data-dc-tpl="4" style="flex: 1 1 240px; max-width: 240px; background: rgb(20, 35, 30);"><div class="sc-host" data-sc-name="Sidebar" data-dc-tpl="5"><nav data-dc-tpl="3" aria-label="Menu HRIS" style="width: 240px; box-sizing: border-box; min-height: 100%; background: rgb(20, 35, 30); color: rgb(223, 233, 228); font-family: &quot;IBM Plex Sans&quot;, &quot;Segoe UI&quot;, sans-serif; padding: 16px 12px 24px; display: flex; flex-direction: column; gap: 4px;">
+  <a data-dc-tpl="4" href="index.html" style="display: flex; align-items: center; gap: 10px; padding: 6px 8px 14px; text-decoration: none; color: rgb(255, 255, 255);">
+    <span data-dc-tpl="5" style="width: 28px; height: 28px; border-radius: 6px; background: rgb(47, 138, 111); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;">O</span>
+    <span data-dc-tpl="6" style="font-weight: 600; font-size: 15px;">Omni ERP · HRIS</span>
+  </a>
+  
+    <div data-dc-tpl="8" style="display: flex; flex-direction: column; gap: 2px; padding-top: 10px;">
+      <div data-dc-tpl="9" style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: rgb(143, 168, 157); padding: 0px 8px 4px;"><span class="sc-interp">MASTER DATA</span></div>
+      
+        <a data-dc-tpl="11" href="L_Karyawan.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; background: rgb(47, 138, 111); color: rgb(255, 255, 255); font-weight: 600;">
+          <span data-dc-tpl="12"><span class="sc-interp">Karyawan</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_PT.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">PT</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Departemen.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Departemen</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Jabatan.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Jabatan</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Mesin.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Mesin Absensi</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Akun.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Akun COA</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Bank.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Bank dan Kas</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Jadwal.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Jadwal Kerja</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_GantiJadwal.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Ganti Jadwal</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_HariLibur.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Hari Libur</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Komponen.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Komponen Gaji</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_JenisIzin.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Jenis Izin</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_JenisCuti.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Jenis Cuti</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Approval.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Approval</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="M_Setting.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Setting Payroll</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="M_AkunPayroll.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Setting Akuntansi Payroll</span></span>
+          
+        </a>
+      
+    </div>
+  
+    <div data-dc-tpl="8" style="display: flex; flex-direction: column; gap: 2px; padding-top: 10px;">
+      <div data-dc-tpl="9" style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: rgb(143, 168, 157); padding: 0px 8px 4px;"><span class="sc-interp">PRESENSI</span></div>
+      
+        <a data-dc-tpl="11" href="L_UploadScanlog.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Upload Presensi</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="P_SelfChecklog.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Self Checklog</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="P_Rekap.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Rekap Presensi</span></span>
+          
+        </a>
+      
+    </div>
+  
+    <div data-dc-tpl="8" style="display: flex; flex-direction: column; gap: 2px; padding-top: 10px;">
+      <div data-dc-tpl="9" style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: rgb(143, 168, 157); padding: 0px 8px 4px;"><span class="sc-interp">PENGAJUAN</span></div>
+      
+        <a data-dc-tpl="11" href="L_Izin.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Izin</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Cuti.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Cuti</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Lembur.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Lembur</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Hutang.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Hutang Karyawan</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Reimburse.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Reimburse</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Dinas.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Perjalanan Dinas</span></span>
+          <span data-dc-tpl="14" style="font-size: 10.5px; color: rgb(232, 196, 106);"><span class="sc-interp">On Discuss</span></span>
+        </a>
+      
+    </div>
+  
+    <div data-dc-tpl="8" style="display: flex; flex-direction: column; gap: 2px; padding-top: 10px;">
+      <div data-dc-tpl="9" style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: rgb(143, 168, 157); padding: 0px 8px 4px;"><span class="sc-interp">APPROVAL</span></div>
+      
+        <a data-dc-tpl="11" href="T_ApprovalSaya.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Daftar Approval Saya</span></span>
+          
+        </a>
+      
+    </div>
+  
+    <div data-dc-tpl="8" style="display: flex; flex-direction: column; gap: 2px; padding-top: 10px;">
+      <div data-dc-tpl="9" style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: rgb(143, 168, 157); padding: 0px 8px 4px;"><span class="sc-interp">PAYROLL</span></div>
+      
+        <a data-dc-tpl="11" href="Y_Periode.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Periode Payroll</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="L_Borongan.html" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Gaji Borongan</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Slip Gaji</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Tanda Terima Gaji Cash</span></span>
+          
+        </a>
+      
+    </div>
+  
+    <div data-dc-tpl="8" style="display: flex; flex-direction: column; gap: 2px; padding-top: 10px;">
+      <div data-dc-tpl="9" style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: rgb(143, 168, 157); padding: 0px 8px 4px;"><span class="sc-interp">REPORT</span></div>
+      
+        <a data-dc-tpl="11" href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Gaji Total</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Payroll ke Accounting</span></span>
+          
+        </a>
+      
+        <a data-dc-tpl="11" href="#" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 6px; font-size: 13.5px; text-decoration: none; color: rgb(223, 233, 228);">
+          <span data-dc-tpl="12"><span class="sc-interp">Laporan Quotation</span></span>
+          
+        </a>
+      
+    </div>
+  </nav></div></div>
+  <main data-dc-tpl="6" style="flex: 999 1 560px; min-width: 0px; display: flex; flex-direction: column;">
+    <div data-dc-tpl="7" style="min-height: 56px; background: rgb(255, 255, 255); border-bottom: 1px solid rgb(223, 228, 224); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 0px 24px;">
+      <span data-dc-tpl="8" style="font-size: 13px; color: rgb(85, 98, 91);">Master Data / Karyawan / <b data-dc-tpl="9" style="color: rgb(27, 36, 32);">Tambah Karyawan</b></span>
+      <span data-dc-tpl="10" style="font-size: 13px; color: rgb(85, 98, 91);">Bu Vani · Admin HR</span>
+    </div>
+    <div data-dc-tpl="11" style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+      <div data-dc-tpl="12" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+        <div data-dc-tpl="13" style="display: flex; flex-direction: column; gap: 4px;">
+          <h1 data-dc-tpl="14" style="margin: 0px; font-size: 22px;">Tambah Karyawan</h1>
+          <span data-dc-tpl="15" class="hint">NIK dibuat otomatis saat disimpan dan tidak berubah walau departemen diganti.</span>
+        </div>
+        <div data-dc-tpl="16" style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button data-dc-tpl="17" class="btn" type="button">Batal</button>
+          <button data-dc-tpl="18" class="btn pri" type="button">Simpan</button>
+        </div>
+      </div>
+
+      <section data-dc-tpl="19" class="card">
+        <h2 data-dc-tpl="20" class="sec">Identitas dan Organisasi</h2>
+        <div data-dc-tpl="21" class="g3">
+          <label data-dc-tpl="22" class="f">NIK<input data-dc-tpl="23" class="in ro mono" readonly="" value="IB-WRH-2505-0003 (otomatis)"></label>
+          <label data-dc-tpl="24" class="f"><span data-dc-tpl="25" class="req">PT</span><select data-dc-tpl="26" class="in"><option data-dc-tpl="27">IB · Indo Bagan</option><option data-dc-tpl="28">BM · Bagan Mart</option><option data-dc-tpl="29">BP · Bagan Plus</option></select></label>
+          <label data-dc-tpl="30" class="f"><span data-dc-tpl="31" class="req">Departemen</span><select data-dc-tpl="32" class="in"><option data-dc-tpl="33">WRH · Warehouse</option><option data-dc-tpl="34">SLS · Sales</option><option data-dc-tpl="35">PRC · Purchasing</option><option data-dc-tpl="36">FAT · Finance dan Tax</option></select></label>
+          <label data-dc-tpl="37" class="f"><span data-dc-tpl="38" class="req">Nama Depan</span><input data-dc-tpl="39" class="in" value="Wina"></label>
+          <label data-dc-tpl="40" class="f">Nama Belakang<input data-dc-tpl="41" class="in" placeholder="Nama belakang"></label>
+          <label data-dc-tpl="42" class="f"><span data-dc-tpl="43" class="req">Jabatan</span><select data-dc-tpl="44" class="in"><option data-dc-tpl="45">Staff Gudang</option></select></label>
+          <label data-dc-tpl="46" class="f"><span data-dc-tpl="47" class="req">Tanggal Lahir</span><input data-dc-tpl="48" class="in" type="date" value="1998-05-12"></label>
+          <label data-dc-tpl="49" class="f"><span data-dc-tpl="50" class="req">Jenis Kelamin</span><select data-dc-tpl="51" class="in"><option data-dc-tpl="52">Perempuan</option><option data-dc-tpl="53">Laki-laki</option></select></label>
+          <label data-dc-tpl="54" class="f">Status Perkawinan<select data-dc-tpl="55" class="in"><option data-dc-tpl="56">Lajang</option><option data-dc-tpl="57">Menikah</option><option data-dc-tpl="58">Cerai</option></select></label>
+        </div>
+      </section>
+
+      <section data-dc-tpl="59" class="card">
+        <h2 data-dc-tpl="60" class="sec">Kepegawaian dan Gaji</h2>
+        <div data-dc-tpl="61" class="g3">
+          <label data-dc-tpl="62" class="f"><span data-dc-tpl="63" class="req">Tanggal Masuk</span><input data-dc-tpl="64" class="in" type="date" value="2025-05-01"><span data-dc-tpl="65" class="hint">Dasar YYMM pada NIK dan masa kerja cuti</span></label>
+          <label data-dc-tpl="66" class="f"><span data-dc-tpl="67" class="req">Status Kerja</span><select data-dc-tpl="68" class="in"><option data-dc-tpl="69">Active</option><option data-dc-tpl="70">Probation</option><option data-dc-tpl="71">Berhenti</option><option data-dc-tpl="72">Pensiun</option></select></label>
+          <label data-dc-tpl="73" class="f">Tanggal Berhenti<input data-dc-tpl="74" class="in" type="date"><span data-dc-tpl="75" class="hint">Wajib jika Status Kerja = Berhenti</span></label>
+          <label data-dc-tpl="76" class="f"><span data-dc-tpl="77" class="req">Status Karyawan</span><select data-dc-tpl="78" class="in"><option data-dc-tpl="79">Kontrak</option><option data-dc-tpl="80">Tetap</option><option data-dc-tpl="81">Magang</option></select><span data-dc-tpl="82" class="hint">Borongan tidak diinput di sini</span></label>
+          <label data-dc-tpl="83" class="f"><span data-dc-tpl="84" class="req">Siklus Gaji</span><select data-dc-tpl="85" class="in"><option data-dc-tpl="86">Mingguan</option><option data-dc-tpl="87">Bulanan</option></select></label>
+          <label data-dc-tpl="88" class="f"><span data-dc-tpl="89" class="req">Berlaku Mulai</span><input data-dc-tpl="90" class="in" type="date" value="2025-05-01"><span data-dc-tpl="91" class="hint">Isi tanggal baru saat siklus diganti</span></label>
+          <label data-dc-tpl="92" class="f">Gaji Pokok (Referensi)<input data-dc-tpl="93" class="in" value="Rp 618.000"><span data-dc-tpl="94" class="hint">Hanya untuk mengisi kolom Gaji di template upload</span></label>
+          <label data-dc-tpl="95" class="f"><span data-dc-tpl="96" class="req">Group Jadwal Kerja</span><select data-dc-tpl="97" class="in"><option data-dc-tpl="98">Kantor</option><option data-dc-tpl="99">Gudang</option><option data-dc-tpl="100">Toko</option></select></label>
+          <label data-dc-tpl="101" class="f">Limit Pinjaman<input data-dc-tpl="102" class="in" placeholder="Kosong = tidak dibatasi"></label>
+        </div>
+        <div data-dc-tpl="103" style="display: flex; flex-direction: column; gap: 8px;">
+          <div data-dc-tpl="104" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px;"><b data-dc-tpl="105" style="font-size: 14px;">Riwayat Siklus Gaji</b><span data-dc-tpl="106" class="hint">Read-only, terisi otomatis setiap Siklus Gaji / Berlaku Mulai diubah lalu Simpan</span></div>
+          <div data-dc-tpl="107" style="overflow-x: auto; border: 1px solid rgb(223, 228, 224); border-radius: 8px;"><table data-dc-tpl="108" style="width: 100%; border-collapse: collapse;"><thead data-dc-tpl="109"><tr data-dc-tpl="110"><th data-dc-tpl="111" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Siklus</th><th data-dc-tpl="112" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Berlaku Mulai</th><th data-dc-tpl="113" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Berlaku Sampai</th><th data-dc-tpl="114" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Diubah oleh</th><th data-dc-tpl="115" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Tanggal Ubah</th><th data-dc-tpl="116" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Status</th></tr></thead><tbody data-dc-tpl="117"><tr data-dc-tpl="118"><td data-dc-tpl="119" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Mingguan</td><td data-dc-tpl="120" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">01-05-2025</td><td data-dc-tpl="121" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">31-12-2026</td><td data-dc-tpl="122" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Bu Vani</td><td data-dc-tpl="123" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">01-05-2025 09:12</td><td data-dc-tpl="124" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;"></td></tr><tr data-dc-tpl="125"><td data-dc-tpl="126" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Bulanan</td><td data-dc-tpl="127" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">01-01-2027</td><td data-dc-tpl="128" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">-</td><td data-dc-tpl="129" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Bu Vani</td><td data-dc-tpl="130" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">15-12-2026 14:05</td><td data-dc-tpl="131" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;"><span data-dc-tpl="132" class="chip">Berlaku</span></td></tr></tbody></table></div>
+          <span data-dc-tpl="133" class="hint">Contoh: Kontrak pindah ke Bulanan per 1 Jan 2027. Periode mingguan 27 Des 2026 - 2 Jan 2027 hanya menghitung 27 - 31 Des, lalu ikut periode bulanan mulai 1 Jan.</span>
+        </div>
+      </section>
+
+      <section data-dc-tpl="134" class="card">
+        <h2 data-dc-tpl="135" class="sec">Presensi dan Pembayaran</h2>
+        <div data-dc-tpl="136" class="g3">
+          <label data-dc-tpl="137" class="f"><span data-dc-tpl="138" class="req">Mesin Absensi</span><select data-dc-tpl="139" class="in"><option data-dc-tpl="140">MSN-01 · Toko IBB</option><option data-dc-tpl="141">MSN-02 · Kumai</option></select><span data-dc-tpl="142" class="hint">Satu karyawan satu mesin</span></label>
+          <label data-dc-tpl="143" class="f"><span data-dc-tpl="144" class="req">PIN Fingerprint</span><input data-dc-tpl="145" class="in mono" value="7"><span data-dc-tpl="146" class="hint">Unik per mesin, kunci ke Upload Presensi</span></label>
+          <label data-dc-tpl="147" class="f"><span data-dc-tpl="148" class="req">Metode Bayar</span><select data-dc-tpl="149" class="in"><option data-dc-tpl="150">Cash</option><option data-dc-tpl="151">Transfer</option></select></label>
+          <label data-dc-tpl="152" class="f">Bank<select data-dc-tpl="153" class="in"><option data-dc-tpl="154">-</option><option data-dc-tpl="155">BRI</option></select><span data-dc-tpl="156" class="hint">Bank dan rekening wajib jika Transfer</span></label>
+          <label data-dc-tpl="157" class="f">Nomor Rekening<input data-dc-tpl="158" class="in" placeholder="-"></label>
+          <label data-dc-tpl="159" class="f">Nomor WA<input data-dc-tpl="160" class="in" value="0812 xxxx xxxx"><span data-dc-tpl="161" class="hint">Tujuan kirim slip</span></label>
+          <label data-dc-tpl="162" class="f">Email<input data-dc-tpl="163" class="in" placeholder="Opsional, dipakai jika WA kosong"></label>
+          <label data-dc-tpl="164" class="f">NPWP<input data-dc-tpl="165" class="in" placeholder="Opsional"></label>
+          <label data-dc-tpl="166" class="f" style="grid-column: span 2;">Alamat<input data-dc-tpl="167" class="in" placeholder="Opsional"></label>
+        </div>
+      </section>
+
+      <section data-dc-tpl="168" class="card">
+        <div data-dc-tpl="169" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px;">
+          <h2 data-dc-tpl="170" class="sec">Saldo Cuti</h2>
+          <button data-dc-tpl="171" class="btn" type="button">Isi Saldo Awal</button>
+        </div>
+        <span data-dc-tpl="172" class="hint">Read-only, dihitung otomatis: kuota dari Setting Payroll (12 hari setelah masa kerja 12 bulan), terpakai dari Form Cuti Approved (Pending mengunci kuota), Cuti Bersama dari Master Hari Libur (Potong Kuota Cuti). Sisa yang sama tampil di Form Cuti dan Laporan Cuti.</span>
+        <div data-dc-tpl="173" style="overflow-x: auto; border: 1px solid rgb(223, 228, 224); border-radius: 8px;"><table data-dc-tpl="174" style="width: 100%; border-collapse: collapse;"><thead data-dc-tpl="175"><tr data-dc-tpl="176"><th data-dc-tpl="177" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Tahun</th><th data-dc-tpl="178" style="text-align: right; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Kuota</th><th data-dc-tpl="179" style="text-align: right; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Terpakai (Form Cuti)</th><th data-dc-tpl="180" style="text-align: right; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Cuti Bersama</th><th data-dc-tpl="181" style="text-align: right; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Sisa</th><th data-dc-tpl="182" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Status</th></tr></thead><tbody data-dc-tpl="183"><tr data-dc-tpl="184"><td data-dc-tpl="185" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">2026</td><td data-dc-tpl="186" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">12</td><td data-dc-tpl="187" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">3</td><td data-dc-tpl="188" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">0</td><td data-dc-tpl="189" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;"><b data-dc-tpl="190">9</b></td><td data-dc-tpl="191" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;"><span data-dc-tpl="192" class="chip">Berjalan</span></td></tr><tr data-dc-tpl="193"><td data-dc-tpl="194" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">2025</td><td data-dc-tpl="195" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">0</td><td data-dc-tpl="196" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">0</td><td data-dc-tpl="197" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">0</td><td data-dc-tpl="198" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">0</td><td data-dc-tpl="199" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Belum berhak (masa kerja &lt; 12 bulan)</td></tr></tbody></table></div>
+        <b data-dc-tpl="200" style="font-size: 14px;">Mutasi 2026</b><span data-dc-tpl="201" class="hint">Terpakai 3 hari = 2 hari sebelum sistem (saldo awal) + 1 hari Form Cuti setelah go-live.</span>
+        <div data-dc-tpl="202" style="overflow-x: auto; border: 1px solid rgb(223, 228, 224); border-radius: 8px;"><table data-dc-tpl="203" style="width: 100%; border-collapse: collapse;"><thead data-dc-tpl="204"><tr data-dc-tpl="205"><th data-dc-tpl="206" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Tanggal</th><th data-dc-tpl="207" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Sumber</th><th data-dc-tpl="208" style="text-align: left; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Dokumen / Keterangan</th><th data-dc-tpl="209" style="text-align: right; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Hari</th><th data-dc-tpl="210" style="text-align: right; font-size: 12px; color: rgb(85, 98, 91); font-weight: 600; padding: 8px 12px; border-bottom: 1px solid rgb(223, 228, 224); background: rgb(246, 247, 245); white-space: nowrap;">Sisa</th></tr></thead><tbody data-dc-tpl="211"><tr data-dc-tpl="212"><td data-dc-tpl="213" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">01-05-2026</td><td data-dc-tpl="214" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Kuota tahunan</td><td data-dc-tpl="215" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Kuota 2026 (masa kerja genap 12 bulan)</td><td data-dc-tpl="216" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">+12</td><td data-dc-tpl="217" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">12</td></tr><tr data-dc-tpl="218"><td data-dc-tpl="219" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">01-11-2026</td><td data-dc-tpl="220" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Saldo awal migrasi</td><td data-dc-tpl="221" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Cuti terpakai sebelum sistem: 2 hari (diisi Admin HR saat migrasi)</td><td data-dc-tpl="222" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">-2</td><td data-dc-tpl="223" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">10</td></tr><tr data-dc-tpl="224"><td data-dc-tpl="225" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">16-11-2026</td><td data-dc-tpl="226" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">Form Cuti</td><td data-dc-tpl="227" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap;">CTI/2026/11/0004 · Approved</td><td data-dc-tpl="228" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">-1</td><td data-dc-tpl="229" style="padding: 8px 12px; border-bottom: 1px solid rgb(238, 241, 238); font-size: 13.5px; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums;">9</td></tr></tbody></table></div>
+        <span data-dc-tpl="230" class="hint">Isi Saldo Awal hanya dipakai sekali saat migrasi (go-live). Kuota habis saat Cuti Bersama = hari itu dipotong gaji harian.</span>
+      </section>
+
+      <div data-dc-tpl="231" class="note">
+        <b data-dc-tpl="232">Catatan developer (Blueprint 4.1, AC 1 - 5)</b>
+        <span data-dc-tpl="233">NIK [PT]-[DEPT]-[YYMM]-[NNNN], NNNN urut berlanjut per PT + Dept. Mesin + PIN wajib; PIN unik per mesin dan satu karyawan hanya di satu mesin, tanpa pengecualian presensi.</span>
+        <span data-dc-tpl="234">Siklus Gaji + Berlaku Mulai menentukan periode payroll yang diikuti (Kontrak direncanakan pindah ke Bulanan tahun depan). Setiap perubahan disimpan di tabel riwayat terpisah (karyawan, siklus, berlaku mulai, berlaku sampai, diubah oleh, tanggal ubah); tabel ini yang dibaca saat menentukan peserta periode payroll.</span>
+        <span data-dc-tpl="235">Slip dikirim ke WA, jika kosong ke Email, jika keduanya kosong masuk daftar cetak.</span>
+        <span data-dc-tpl="236">Saldo Cuti disimpan di tabel saldo per karyawan per tahun + tabel mutasi (Blueprint 7.3); tidak ada menu Saldo Cuti terpisah.</span>
+      </div>
+    </div>
+  </main></div></div></div>
+
+
+
+</body></html>
